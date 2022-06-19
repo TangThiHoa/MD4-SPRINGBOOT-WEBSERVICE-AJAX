@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!--    //Sử dụng ajax()cần có thư viện-->
+</head>
+<body>
+<h1>Danh sách sản phẩm </h1>
+<button onclick="findAllProduct()">Hiện dữ liệu</button>
+<button onclick="showAddForm()">Thêm </button>
+<div id="display"></div>
+<script>
+
+    // function display(data) {
+    //     let str = "";
+    //     console.log(data)
+    //     for (let i = 0; i < data.length; i++) {
+    //         str += "<h3>" + data[i].name + "," + data[i].price + data[i].category.name + "</h3>"
+    //     }
+    //     show.innerHTML = str;
+    // }
+    //hàm chung in ra sản phẩm
+    function display(data) {
+        let content = `<tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                        <th>Action</th>
+                        <br>
+                    </tr>`;
+        console.log(data)
+        for (let i = 0; i < data.length; i++) {
+            content += getProduct(data[i]);
+        }
+        show.innerHTML = content;
+    }
+        // lấy dữ liệu
+        function getProduct(product) {
+            return `<tr>
+            <td>${product.name}</td>
+
+            <td>${product.price}</td>
+
+            <td>${product.category.name}</td>
+
+            <td><button onclick="showEditForm(${product.id})">Sửa</button></td>
+            <td><button onclick="deleteProduct(${product.id})">Xóa</button></td>
+            <br>
+        </tr>`
+        }
+    //hàm hiện thị tất cả
+    let show = document.getElementById("display");
+    function findAllProduct() {
+        // let str=""
+        $.ajax({                          // $.ajax()là hàm nhỏ của jQuerry // $ : coi như trang html hiện tại
+            type: "GET",
+            url: "http://localhost:8080/products",
+            success: function (data) {            //data là dữ liệu mình gửi sang , nó tự gộp , tự chuyển thành data
+                display(data) //vì từ dòng 33-38: bị lặp lại nhiều lần phía dưới nên ta tạo riêng hàm chung là dislpay(dòng 65) để gọi
+            }, error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+    function showAddForm() {
+            let str = "\n" +
+                "<input type=\"text\" id=\"name\">\n" +
+                "<input type=\"text\" id=\"price\">\n" +
+                "<input type=\"text\" id=\"category\">" +
+                "<button onclick='save()'>Thêm</button>"
+            show.innerHTML = str;
+
+
+    }
+
+
+
+
+</script>
+</body>
+</html>

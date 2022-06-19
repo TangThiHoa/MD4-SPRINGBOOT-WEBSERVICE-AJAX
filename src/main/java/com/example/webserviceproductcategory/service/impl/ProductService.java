@@ -1,0 +1,47 @@
+package com.example.webserviceproductcategory.service.impl;
+
+import com.example.webserviceproductcategory.model.Product;
+import com.example.webserviceproductcategory.repository.ProductRepository;
+import com.example.webserviceproductcategory.service.IProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class ProductService implements IProductService {
+    @Autowired
+    ProductRepository productRepository ;
+
+    @Override
+    public void save(Product product) {
+productRepository.save(product);
+
+    }
+
+    @Override
+    public Iterable<Product> findAll() {
+        return productRepository.findAll();
+    }
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    @Override
+    public void remove(Long id) {
+        productRepository.deleteById(id);
+
+    }
+
+    @Override
+    public Iterable<Product> findAllByOrderByPrice() {
+        return productRepository.findAllByOrderByPrice();
+    }
+
+    @Override
+    public Iterable<Product> findAllByPriceBetween(int from, int to) {
+        return productRepository.findAllByPriceBetween(from,to);
+    }
+}
