@@ -15,9 +15,9 @@
     <!--    //Sử dụng ajax()cần có thư viện-->
 </head>
 <body>
-<h1>Danh sách sản phẩm </h1>
-<button onclick="findAllProduct()">Hiện dữ liệu</button>
-<button onclick="showAddForm()">Thêm </button>
+<h1>LIST PRODUCT </h1>
+<button onclick="findAllProduct()">SHOW ALL PRODUCT LIST</button>
+<button onclick="showAddForm()">ADD NEW PRODUCT </button>
 <div id="display"></div>
 <script>
 
@@ -54,8 +54,8 @@
 
             <td>${product.category.name}</td>
 
-            <td><button onclick="showEditForm(${product.id})">Sửa</button></td>
-            <td><button onclick="deleteProduct(${product.id})">Xóa</button></td>
+            <td><button onclick="showEditForm(${product.id})">Edit</button></td>
+            <td><button onclick="deleteProduct(${product.id})">Delete</button></td>
             <br>
         </tr>`
         }
@@ -73,6 +73,7 @@
             }
         })
     }
+    //hiển thị form
     function showAddForm() {
             let str = "\n" +
                 "<input type=\"text\" id=\"name\">\n" +
@@ -80,8 +81,35 @@
                 "<input type=\"text\" id=\"category\">" +
                 "<button onclick='save()'>Thêm</button>"
             show.innerHTML = str;
+    }
+    //lưu sau khi thêm mới
+    function save() {
+        let name = document.getElementById("name").value;
+        let price = document.getElementById("price").value;
+        let categoryId = document.getElementById("category").value;
+        let pro = {
+            name: name,             //name trước: là tên thuộc tính của đtượng pro , sau :là giá trị được lấy ở trên
+            price: price,
+            category: {
+                id: categoryId
+            }
+        }
 
-
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            type: 'POST',
+            url: 'http://localhost:8080/products',
+            data: JSON.stringify(pro),   //chuyển kiểu dữ liệu js thành dạng JSON
+            success: function () {
+                findAllProduct()              //  thay vì hiển thị thông báo alert("Thành công ") thì ta hiển thị luôn ds
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
     }
 
 
