@@ -19,7 +19,10 @@
 <button onclick="findAllProduct()">SHOW ALL PRODUCT LIST</button>
 <button onclick="showAddForm()">ADD NEW PRODUCT</button>
 <button onclick="findAllByOrderByPrice()">ORDER BY PRICE</button>
-<button onclick="top4New()">TOP 4 NEW </button>
+<button onclick="top4New()">TOP 4 NEW</button>
+<hr>
+<input type="text" id="name">
+<button onclick="searchByName()">Search Name</button>
 <hr>
 <input type="text" id="from">
 <input type="text" id="to">
@@ -222,6 +225,19 @@
         })
     }
 
+    //11.SEARCH THEO TÊN
+    function searchByName() {
+        let name = document.getElementById('name').valua;
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/products/searchName?name=" + name,
+            success: function (data) {
+                display(data)
+            }, error: function (error) {
+                console.log(error);
+            }
+        });
+    }
 
 
 </script>
