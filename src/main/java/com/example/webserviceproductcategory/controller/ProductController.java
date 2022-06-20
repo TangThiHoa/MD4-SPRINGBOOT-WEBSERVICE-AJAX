@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @CrossOrigin("*")
 @RequestMapping("/products")
@@ -25,4 +27,26 @@ public class ProductController {
         productService.save(product);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> findProductById(@PathVariable Long id) {
+        Optional<Product> product = productService.findById(id);
+        if (!product.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(product.get(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity updateProduct(@RequestBody Product product, @PathVariable Long id) {
+        Optional<Product> productOptional = productService.findById(id);
+        if (!productOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        product.setId(productOptional.get().getId());
+        productService.save(product);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }
