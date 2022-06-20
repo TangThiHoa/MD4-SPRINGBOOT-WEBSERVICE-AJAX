@@ -48,5 +48,16 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
+        Optional<Product> productOptional = productService.findById(id);
+        if (!productOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        productService.remove(id);
+        return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
+    }
+
+
 
 }

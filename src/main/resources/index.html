@@ -56,23 +56,27 @@
             <td>${product.category.name}</td>
 
             <td><button onclick="showEditForm(${product.id})">Edit</button></td>
+<!--            //Nhấn nút gọi sự kiện trong onclick => xuống hàm showEditForm -->
             <td><button onclick="deleteProduct(${product.id})">Delete</button></td>
             <br>
         </tr>`
     }
-    //hàm edit
-    let edit= document.getElementById("display")
-    function  showEditForm(id){
+
+    // hàm showEditForm
+    let edit = document.getElementById("display")
+
+    function showEditForm(id) {
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:8080/products/'+id,
-            success: function (product) {
-                console.log("vao day không" +product)
-                let str = `"\n" +
-                    "<input  value="${product.name}" id="name">" +
-                "<input value="${product.price}" id="price">" +
-                "<input value="${product.category.id}" id="category">" +
-                "<button onclick="update(${product.id})">Edit</button>"`
+            url: 'http://localhost:8080/products/' + id,           //lấy dữ liệu từ bên controller
+            success: function (product) {                           //product được binding từ controller qua ( id thành đối tượng )
+                console.log("vao day không" + product)
+                let str = `
+                    <input  value="${product.name}" id="name">
+                <input value="${product.price}" id="price">
+                <input value="${product.category.id}" id="category">
+                <button onclick="update(${product.id})">Edit</button>`    //Sau khi nhấn nút edit gọi đến sự kiện trong onclick rồi vào hàm update
+
                 edit.innerHTML = str;
             },
             error: function (error) {
@@ -83,6 +87,7 @@
 
     }
 
+    //hàm update
     function update(id) {
         let name = document.getElementById("name").value;
         let price = document.getElementById("price").value;
@@ -101,7 +106,7 @@
                 'Content-Type': 'application/json',
             },
             type: 'PUT',
-            url: 'http://localhost:8080/products/'+id,
+            url: 'http://localhost:8080/products/' + id,
             data: JSON.stringify(pro),
             success: function () {
                 console.log("vao day k")
@@ -111,6 +116,20 @@
                 console.log(error)
             }
         })
+    }
+
+    //xóa
+    function deleteProduct(id) {
+        $.ajax({
+            type: "DELETE",
+            //tên API
+            url: "http://localhost:8080/products/" + id,
+            //xử lý khi thành công
+            success: function () {
+                findAllProduct()
+            }
+
+        });
     }
 
     //hàm hiện thị tất cả
@@ -168,7 +187,6 @@
             }
         })
     }
-
 
 
 </script>
