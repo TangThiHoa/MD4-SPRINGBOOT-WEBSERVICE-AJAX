@@ -64,6 +64,25 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/top4New")                 //Tìm 4 sản phẩm mới nhất
+    public ResponseEntity<Iterable<Product>>getTop4New(){
+        Iterable<Product> products = productService.getTop4();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/priceBetween")               //Tìm trong khoảng giá
+    public ResponseEntity<Iterable<Product>> findAllByPriceBetween(@RequestParam int from, @RequestParam int to) {
+        return new ResponseEntity<>(productService.findAllByPriceBetween(from, to), HttpStatus.OK);
+    }
+
+    @GetMapping("/searchName")              //Tìm theo tên
+    public ResponseEntity<Iterable<Product>> findAllByNameContainingProduct(@RequestParam String name) {
+        Iterable<Product> products = productService.findAllByNameContaining(name);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+
 
 
 

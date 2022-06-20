@@ -19,6 +19,11 @@
 <button onclick="findAllProduct()">SHOW ALL PRODUCT LIST</button>
 <button onclick="showAddForm()">ADD NEW PRODUCT</button>
 <button onclick="findAllByOrderByPrice()">ORDER BY PRICE</button>
+<button onclick="top4New()">TOP 4 NEW </button>
+<hr>
+<input type="text" id="from">
+<input type="text" id="to">
+<button onclick="findByPriceBetween()">Search Price Between</button>
 
 <div id="display"></div>
 <script>
@@ -188,6 +193,35 @@
             }
         })
     }
+
+    //9. HÀM IN RA 4 SẢN PHẨM MỚI NHẤT :
+    function top4New() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/products/top4New",
+            success: function (data) {
+                display(data)
+            }, error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    //10.SEARCH THEO KHOẢNG GIÁ
+    function findByPriceBetween() {
+        let from = document.getElementById('from').value;
+        let to = document.getElementById('to').value;
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/products/priceBetween?from=" + from + "&to=" + to,
+            success: function (data) {
+                display(data)
+            }, error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
 
 
 </script>
