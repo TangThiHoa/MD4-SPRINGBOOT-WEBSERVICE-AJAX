@@ -18,18 +18,27 @@
 <h1>LIST PRODUCT </h1>
 <button onclick="findAllProduct()">SHOW ALL PRODUCT LIST</button>
 <button onclick="showAddForm()">ADD NEW PRODUCT</button>
+<button onclick="findAllByOrderByPrice()">ORDER BY PRICE</button>
+
 <div id="display"></div>
 <script>
 
-    // function display(data) {
-    //     let str = "";
-    //     console.log(data)
-    //     for (let i = 0; i < data.length; i++) {
-    //         str += "<h3>" + data[i].name + "," + data[i].price + data[i].category.name + "</h3>"
-    //     }
-    //     show.innerHTML = str;
-    // }
-    //hàm chung in ra sản phẩm
+    //1.HÀM HIỂN THỊ TẤT CẢ CỦA BẢNG PRODUCT
+    let show = document.getElementById("display");
+
+    function findAllProduct() {
+        $.ajax({                                                                    // $.ajax()là hàm nhỏ của jQuerry // $ : coi như trang html hiện tại
+            type: "GET",
+            url: "http://localhost:8080/products",
+            success: function (data) {                                              //data là dữ liệu mình gửi sang , nó tự gộp , tự chuyển thành data
+                display(data)
+            }, error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    // 2.HÀM CHUNG CỦA BẢNG SẢN PHẨM ĐỂ TRÁNH PHẢI VIẾT LẶP LẠI
     function display(data) {
         let content = `<tr>
                         <th>Name</th>
@@ -46,7 +55,7 @@
         show.innerHTML = content;
     }
 
-    // lấy dữ liệu
+    // 3.HÀM LẤY DỮ LIỆU TỪ BẢNG PRODUCT
     function getProduct(product) {
         return `<tr>
             <td>${product.name}</td>
@@ -55,27 +64,27 @@
 
             <td>${product.category.name}</td>
 
-            <td><button onclick="showEditForm(${product.id})">Edit</button></td>
-<!--            //Nhấn nút gọi sự kiện trong onclick => xuống hàm showEditForm -->
-            <td><button onclick="deleteProduct(${product.id})">Delete</button></td>
+            <td><button onclick="showEditForm(${product.id})">Edit</button></td>       <!--//Nhấn nút gọi sự kiện trong onclick => xuống hàm showEditForm -->
+
+            <td><button onclick="deleteProduct(${product.id})">Delete</button></td>    <!--//Nhấn nút gọi sự kiện trong onclick => xuống hàm deleteProduct -->
             <br>
         </tr>`
     }
 
-    // hàm showEditForm
+    // 4.HÀM showEditForm CỦA BẢNG PRODUCT (Nếu muốn chỉnh sửa phải có hàm này để hiển thị form)
     let edit = document.getElementById("display")
 
     function showEditForm(id) {
         $.ajax({
             type: 'GET',
-            url: 'http://localhost:8080/products/' + id,           //lấy dữ liệu từ bên controller
-            success: function (product) {                           //product được binding từ controller qua ( id thành đối tượng )
+            url: 'http://localhost:8080/products/' + id,                               //lấy dữ liệu từ bên controller
+            success: function (product) {                                             //product được binding từ controller qua ( id thành đối tượng )
                 console.log("vao day không" + product)
                 let str = `
                     <input  value="${product.name}" id="name">
                 <input value="${product.price}" id="price">
                 <input value="${product.category.id}" id="category">
-                <button onclick="update(${product.id})">Edit</button>`    //Sau khi nhấn nút edit gọi đến sự kiện trong onclick rồi vào hàm update
+                <button onclick="update(${product.id})">Edit</button>`                //Sau khi nhấn nút Edit gọi đến sự kiện trong onclick rồi vào hàm update
 
                 edit.innerHTML = str;
             },
@@ -83,11 +92,9 @@
                 console.log(error)
             }
         })
-
-
     }
 
-    //hàm update
+    //4.HÀM UPDATE CỦA PRODUCT (sau khi showFormEdit thì hàm này sẽ thực hiện lưu lại )
     function update(id) {
         let name = document.getElementById("name").value;
         let price = document.getElementById("price").value;
@@ -118,37 +125,18 @@
         })
     }
 
-    //xóa
+    //5.HÀM DELETE CỦA PRODUCT (nếu muốn xóa 1 dòng /1 sản phẩm trong product)
     function deleteProduct(id) {
         $.ajax({
             type: "DELETE",
-            //tên API
             url: "http://localhost:8080/products/" + id,
-            //xử lý khi thành công
-            success: function () {
+            success: function () {                                                             //xử lý khi thành công trả về list
                 findAllProduct()
             }
-
         });
     }
 
-    //hàm hiện thị tất cả
-    let show = document.getElementById("display");
-
-    function findAllProduct() {
-        // let str=""
-        $.ajax({                          // $.ajax()là hàm nhỏ của jQuerry // $ : coi như trang html hiện tại
-            type: "GET",
-            url: "http://localhost:8080/products",
-            success: function (data) {            //data là dữ liệu mình gửi sang , nó tự gộp , tự chuyển thành data
-                display(data) //vì từ dòng 33-38: bị lặp lại nhiều lần phía dưới nên ta tạo riêng hàm chung là dislpay(dòng 65) để gọi
-            }, error: function (error) {
-                console.log(error);
-            }
-        })
-    }
-
-    //hiển thị form
+    //6.HÀM showAddForm CỦA BẢNG PRODUCT ( nếu muốn thêm mới sản phẩm thì phải có hàm này để hiển thị form )
     function showAddForm() {
         let str = "\n" +
             "<input type=\"text\" id=\"name\">\n" +
@@ -158,19 +146,18 @@
         show.innerHTML = str;
     }
 
-    //lưu sau khi thêm mới
+    //7.HÀM SAVE CỦA BẢNG PRODUCT ( sau khi nhập dữ liệu thì hàm này sẽ thực hiện lưu lại )
     function save() {
         let name = document.getElementById("name").value;
         let price = document.getElementById("price").value;
         let categoryId = document.getElementById("category").value;
         let pro = {
-            name: name,             //name trước: là tên thuộc tính của đtượng pro , sau :là giá trị được lấy ở trên
+            name: name,                                                  //name trước: là tên thuộc tính của đtượng pro , sau :là giá trị được lấy ở trên
             price: price,
             category: {
                 id: categoryId
             }
         }
-
         $.ajax({
             headers: {
                 'Accept': 'application/json',
@@ -178,12 +165,26 @@
             },
             type: 'POST',
             url: 'http://localhost:8080/products',
-            data: JSON.stringify(pro),   //chuyển kiểu dữ liệu js thành dạng JSON
+            data: JSON.stringify(pro),                                    //chuyển kiểu dữ liệu js thành dạng JSON
             success: function () {
-                findAllProduct()              //  thay vì hiển thị thông báo alert("Thành công ") thì ta hiển thị luôn ds
+                alert("Thêm mới thành công !!!")
+                findAllProduct()                                        //  thay vì hiển thị thông báo alert("Thành công ") thì ta hiển thị luôn ds
             },
             error: function (error) {
                 console.log(error)
+            }
+        })
+    }
+
+    //8.HÀM ORDERBY , SẮP XẾP THEO GIÁ :
+    function findAllByOrderByPrice() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/products/orderByPrice",
+            success: function (data) {         //data là dữ liệu mình gửi sang , nó tự gộp , tự chuyển thành data
+                display(data)
+            }, error: function (error) {
+                console.log(error);
             }
         })
     }

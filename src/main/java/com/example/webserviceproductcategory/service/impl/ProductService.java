@@ -1,5 +1,6 @@
 package com.example.webserviceproductcategory.service.impl;
 
+import com.example.webserviceproductcategory.model.Category;
 import com.example.webserviceproductcategory.model.Product;
 import com.example.webserviceproductcategory.repository.ProductRepository;
 import com.example.webserviceproductcategory.service.IProductService;
@@ -36,12 +37,28 @@ productRepository.save(product);
     }
 
     @Override
+    public Iterable<Product> findAllByNameContaining(String name) {
+        return productRepository.findAllByNameContaining(name);
+    }
+
+    @Override
     public Iterable<Product> findAllByOrderByPrice() {
+
         return productRepository.findAllByOrderByPrice();
     }
 
     @Override
     public Iterable<Product> findAllByPriceBetween(int from, int to) {
         return productRepository.findAllByPriceBetween(from,to);
+    }
+
+    @Override
+    public Iterable<Product> getTop4() {
+        return productRepository.getTop4();
+    }
+
+    @Override
+    public Iterable<Product> findAllByCategory(Category category) {
+        return productRepository.findAllByCategory(category);
     }
 }

@@ -17,18 +17,18 @@ public class ProductController {
     @Autowired
     IProductService productService;
 
-    @GetMapping("")
+    @GetMapping("")     //Hiển thị
     public ResponseEntity<Iterable<Product>> findAllProduct() {
         return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping("")     //Thêm mới
     public ResponseEntity add(@RequestBody Product product) {
         productService.save(product);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}")         //Tìm theo id
     public ResponseEntity<Product> findProductById(@PathVariable Long id) {
         Optional<Product> product = productService.findById(id);
         if (!product.isPresent()) {
@@ -37,7 +37,7 @@ public class ProductController {
         return new ResponseEntity<>(product.get(), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}")           //Chỉnh sửa theo id
     public ResponseEntity updateProduct(@RequestBody Product product, @PathVariable Long id) {
         Optional<Product> productOptional = productService.findById(id);
         if (!productOptional.isPresent()) {
@@ -48,7 +48,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")              //Xóa theo id
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
         Optional<Product> productOptional = productService.findById(id);
         if (!productOptional.isPresent()) {
@@ -57,6 +57,13 @@ public class ProductController {
         productService.remove(id);
         return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
     }
+
+    @GetMapping("/orderByPrice")            //sắp xếp theo giá
+    public ResponseEntity<Iterable<Product>> findAllByOrderByPrice() {
+        Iterable<Product> products = productService.findAllByOrderByPrice();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
 
 
 
