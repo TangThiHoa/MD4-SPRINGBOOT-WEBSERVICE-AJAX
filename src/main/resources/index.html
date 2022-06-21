@@ -22,7 +22,10 @@
 <button onclick="top4New()">TOP 4 NEW</button>
 <hr>
 <input type="text" id="name">
-<button onclick="searchByName()">Search Name</button>
+<button onclick="searchByName()">Search Name</button><hr>
+<hr>
+<input type="number" id="id">
+<button onclick="searchCategory()">Search Category</button>
 <hr>
 <input type="text" id="from">
 <input type="text" id="to">
@@ -176,7 +179,7 @@
             data: JSON.stringify(pro),                                    //chuyển kiểu dữ liệu js thành dạng JSON
             success: function () {
                 alert("Thêm mới thành công !!!")
-                findAllProduct()                                        //  thay vì hiển thị thông báo alert("Thành công ") thì ta hiển thị luôn ds
+                findAllProduct()//  thay vì hiển thị thông báo alert("Thành công ") thì ta hiển thị luôn ds
             },
             error: function (error) {
                 console.log(error)
@@ -225,13 +228,29 @@
         })
     }
 
-    //11.SEARCH THEO TÊN
+    //11.SEARCH THEO NAME
     function searchByName() {
-        let name = document.getElementById('name').valua;
+        let name = document.getElementById('name').value;
         $.ajax({
             type: "GET",
             url: "http://localhost:8080/products/searchName?name=" + name,
             success: function (data) {
+                display(data)
+            }, error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    //12.SEARCH THEO CATEGOTY
+    function searchCategory() {
+        let id = document.getElementById('id').value;
+        console.log(id)
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/products/searchCategory/" + id,
+            success: function (data) {
+                console.log("=========" +data)
                 display(data)
             }, error: function (error) {
                 console.log(error);

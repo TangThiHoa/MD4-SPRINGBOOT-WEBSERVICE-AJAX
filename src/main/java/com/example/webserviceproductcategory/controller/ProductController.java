@@ -1,6 +1,8 @@
 package com.example.webserviceproductcategory.controller;
 
+import com.example.webserviceproductcategory.model.Category;
 import com.example.webserviceproductcategory.model.Product;
+import com.example.webserviceproductcategory.service.ICategoryService;
 import com.example.webserviceproductcategory.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     IProductService productService;
+    @Autowired
+    ICategoryService categoryService;
 
     @GetMapping("")     //Hiển thị
     public ResponseEntity<Iterable<Product>> findAllProduct() {
@@ -82,8 +86,11 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-
-
-
+    @GetMapping("/searchCategory/{id}")              //Tìm theo danh mục
+    public ResponseEntity<Iterable<Product>> findAllByCategory(@PathVariable Long id) {
+        Category category = categoryService.findById(id).get();
+        Iterable<Product> products = productService.findAllByCategory(category);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 
 }

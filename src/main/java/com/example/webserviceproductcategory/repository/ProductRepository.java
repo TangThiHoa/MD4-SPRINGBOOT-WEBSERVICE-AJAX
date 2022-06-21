@@ -17,5 +17,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select * from products order by id desc LIMIT 4", nativeQuery = true)
     Iterable<Product> getTop4();                                  //Tìm 4 sản phẩm mới nhất theo id
 
-    Iterable<Product> findAllByCategory(Category category);       //Tìm theo danh m
+    Iterable<Product> findAllByCategory(Category category);       //Tìm theo danh mục
 }
